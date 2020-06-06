@@ -12,6 +12,7 @@ import {
   Main,
   NotFound,
   DefaultLayout,
+  Hello,
 } from "./main";
 
 // chunked components
@@ -66,6 +67,8 @@ export default function getRoutes(store: any) {
             onEnter={bindOnEnter(doLogout)}
             title="Logout"
           />
+
+          <Route path="hello" component={Hello} />
 
           <$Route path="error" component={Error} status={500} title="Error" />
           <$Route
