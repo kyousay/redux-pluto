@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { State as TodoState } from "../../../redux/modules/todo";
 
 type Props = TodoState & {
-  onChangeChecked: () => void;
+  onChangeChecked: Function;
 };
 
 export default function Todo(props: Props) {
@@ -12,7 +12,10 @@ export default function Todo(props: Props) {
   return (
     <>
       <TodoList todos={todos} onChangeHandler={onChangeChecked} />
-      <InputForm type="text" />
+      <form>
+        <InputForm type="text" />
+        <button type="submit">登録</button>
+      </form>
     </>
   );
 }

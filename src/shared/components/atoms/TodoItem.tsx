@@ -7,7 +7,7 @@ export type Props = {
   checked: boolean;
   content: string;
   index: number;
-  onChangeHandler: (index: number, checked: boolean) => void;
+  onChangeHandler: Function;
 };
 
 export default function TodoItem(props: Props) {

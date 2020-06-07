@@ -1,10 +1,18 @@
 import { Props as TodoItemProps } from "../../../shared/components/atoms/TodoItem";
+import { steps } from "redux-effects-steps";
+import { fetchrRead, fetchrCreate } from "redux-effects-fetchr";
 
 /**
  * Action types
  */
 
 const TODO_CHANGE_CHECKED = "redux-pluto/todo/checked/change";
+const TODO_GET_TODOS_REQUEST = "redux-pluto/todo/get/todos/request";
+const TODO_GET_TODOS_SUCCESS = "redux-pluto/todo/get/todos/success";
+const TODO_GET_TODOS_FAIL = "redux-pluto/todo/get/todos/fail";
+// const TODO_POST_TODO_REQUEST = "redux-pluto/todo/post/todo/request";
+// const TODO_POST_TODO_SUCCESS = "redux-pluto/todo/post/todo/success";
+// const TODO_POST_TODO_FAIL = "redux-pluto/todo/post/todo/fail";
 
 type CHANGE_CHECKED = {
   type: typeof TODO_CHANGE_CHECKED;
@@ -14,7 +22,63 @@ type CHANGE_CHECKED = {
   };
 };
 
-type Action = CHANGE_CHECKED;
+type TodosRequest = {
+  type: typeof TODO_GET_TODOS_REQUEST;
+  payload: {
+    resource: string;
+  };
+};
+
+type TodosSuccess = {
+  type: typeof TODO_GET_TODOS_SUCCESS;
+  payload: any;
+};
+
+type TodosFail = {
+  type: typeof TODO_GET_TODOS_FAIL;
+  error: boolean;
+};
+
+// type PostTodoRequest = {
+//   type: typeof TODO_POST_TODO_REQUEST;
+//   payload: {
+//     resource: string;
+//     body: {
+//       todo: {
+//         id: string;
+//         content: string;
+//         checked: boolean;
+//         name: string;
+//         index: number;
+//       };
+//     };
+//   };
+// };
+
+// type PostTodoSuccess = {
+//   type: typeof TODO_POST_TODO_SUCCESS;
+//   payload: {
+//     data: {
+//       todo: {
+//         id: string;
+//         content: string;
+//         checked: boolean;
+//         name: string;
+//         index: number;
+//       };
+//     };
+//   };
+// };
+
+// type PostTodoFail = {
+//   type: typeof TODO_POST_TODO_FAIL;
+//   error: boolean;
+// };
+
+type Action = CHANGE_CHECKED | TodosRequest | TodosSuccess | TodosFail;
+// | PostTodoRequest
+// | PostTodoSuccess
+// | PostTodoFail;
 
 /**
  * Action creators
@@ -30,31 +94,107 @@ export function changeChecked(index: number, checked: boolean) {
   };
 }
 
+export function getTodosRequest(payload: { resource: string }): TodosRequest {
+  return {
+    type: TODO_GET_TODOS_REQUEST,
+    payload,
+  };
+}
+
+export function getTodosSuccess(res: any) {
+  return {
+    type: TODO_GET_TODOS_SUCCESS,
+    payload: res,
+  };
+}
+
+export function getTodosFail() {
+  return {
+    type: TODO_GET_TODOS_FAIL,
+    error: true,
+  };
+}
+
+export function getTodos() {
+  return steps(
+    getTodosRequest({ resource: "todo" }),
+    ({ payload }) => fetchrRead(payload),
+    [getTodosSuccess, getTodosFail],
+  );
+}
+
+// export function PostTodoRequest(payload: {
+//   resource: string;
+//   body: {
+//     todo: {
+//       id: string;
+//       content: string;
+//       checked: boolean;
+//       name: string;
+//       index: number;
+//     };
+//   };
+// }): PostTodoRequest {
+//   return {
+//     type: TODO_POST_TODO_REQUEST,
+//     payload,
+//   };
+// }
+
+// export function PostTodoSuccess(payload: {
+//   data: {
+//     todo: {
+//       id: string;
+//       content: string;
+//       checked: boolean;
+//       name: string;
+//       index: number;
+//     };
+//   };
+// }): PostTodoSuccess {
+//   return {
+//     type: TODO_POST_TODO_SUCCESS,
+//     payload,
+//   };
+// }
+
+// export function PostTodoFail(): PostTodoFail {
+//   return {
+//     type: TODO_POST_TODO_FAIL,
+//     error: true,
+//   };
+// }
+
+// export function PostTodo(body: {
+//   todo: {
+//     id: string;
+//     content: string;
+//     checked: boolean;
+//     name: string;
+//     index: number;
+//   };
+// }) {
+//   return steps(
+//     PostTodoRequest({ resource: "todo", body }),
+//     ({ payload }) => fetchrCreate(payload),
+//     [PostTodoSuccess, PostTodoFail],
+//   );
+// }
 /**
  * Initial state
  */
 
 export type State = {
   todos: Omit<TodoItemProps, "onChangeHandler">[];
+  loading: boolean;
+  loaded: boolean;
+  error?: boolean;
 };
 
 const INITIAL_STATE = {
-  todos: [
-    {
-      id: "todo01",
-      content: "hello",
-      checked: true,
-      name: "hello",
-      index: 0,
-    },
-    {
-      id: "todo02",
-      content: "world",
-      checked: false,
-      name: "world",
-      index: 1,
-    },
-  ],
+  todos: [],
+  loading: true,
+  loaded: false,
 };
 
 /**
@@ -71,6 +211,60 @@ export default function(state: State = INITIAL_STATE, action: Action): State {
         todos: newTodos,
       };
     }
+    case TODO_GET_TODOS_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+        loaded: false,
+      };
+    }
+    case TODO_GET_TODOS_SUCCESS: {
+      const {
+        payload: {
+          data: { todos },
+        },
+      } = action;
+      return {
+        ...state,
+        todos,
+        loading: false,
+        loaded: true,
+      };
+    }
+    case TODO_GET_TODOS_FAIL: {
+      const { error } = action;
+      return {
+        ...state,
+        error,
+        loading: false,
+        loaded: false,
+      };
+    }
+    // case TODO_POST_TODO_REQUEST: {
+    //   return {
+    //     ...state,
+    //     loading: true,
+    //     loaded: false,
+    //   };
+    // }
+    // case TODO_POST_TODO_SUCCESS: {
+    //   const { data: todo } = action.payload;
+    //   return {
+    //     ...state,
+    //     todos: [...state.todos, { ...todo }],
+    //     loading: false,
+    //     loaded: true,
+    //   };
+    // }
+    // case TODO_POST_TODO_FAIL: {
+    //   const { error } = action;
+    //   return {
+    //     ...state,
+    //     error,
+    //     loading: false,
+    //     loaded: false,
+    //   };
+    // }
     default: {
       return state;
     }

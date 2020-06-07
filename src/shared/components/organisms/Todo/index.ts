@@ -1,6 +1,7 @@
 import { compose } from "redux";
 import { connect } from "react-redux";
-import { changeChecked } from "../../../redux/modules/todo";
+import { asyncLoader } from "redux-async-loader";
+import { changeChecked, getTodos } from "../../../redux/modules/todo";
 import { RootState } from "../../../redux/modules/reducer";
 import Todo from "./Todo";
 
@@ -14,4 +15,5 @@ export default compose(
         dispatch(changeChecked(index, checked)),
     }),
   ),
+  asyncLoader((props, { dispatch }) => dispatch(getTodos())),
 )(Todo);
