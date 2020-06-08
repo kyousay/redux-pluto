@@ -1,27 +1,22 @@
-import React from "react";
+import React, { FormEvent } from "react";
+import { Field } from "redux-form";
 import TodoList from "../../molecules/TodoList";
-import styled from "styled-components";
 import { State as TodoState } from "../../../redux/modules/todo";
 
 type Props = TodoState & {
   onChangeChecked: Function;
+  handleSubmit: (e: FormEvent) => void;
 };
 
 export default function Todo(props: Props) {
-  const { todos, onChangeChecked } = props;
+  const { todos, onChangeChecked, handleSubmit } = props;
   return (
     <>
       <TodoList todos={todos} onChangeHandler={onChangeChecked} />
-      <form>
-        <InputForm type="text" />
-        <button type="submit">登録</button>
+      <form onSubmit={handleSubmit}>
+        <Field name="content" component="input" type="text" />
+        <button type="submit">submit</button>
       </form>
     </>
   );
 }
-
-const InputForm = styled.input`
-  text-align: center;
-  font-size: 1.8rem;
-  border: 1px solid #d8d8d8;
-`;

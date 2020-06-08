@@ -6,25 +6,16 @@ export type PostTodoAPI = APIDef<
   {},
   {},
   {
-    todo: {
-      id: string;
-      content: string;
-      checked: boolean;
-      name: string;
-      index: number;
-    };
+    content: string;
   },
   {},
   ResponseDef<
     Success201,
     {
-      todo: {
-        id: string;
-        content: string;
-        checked: boolean;
-        name: string;
-        index: number;
-      };
+      id: string;
+      content: string;
+      checked: boolean;
+      name: string;
     }
   >
 >;
@@ -34,34 +25,19 @@ const api: PostTodoAPI = {
     path: ["todo"],
     method: "POST",
     body: {
-      todo: {
-        id: "{:id}",
-        content: "{:content}",
-        checked: "{:checked}",
-        name: "{:name}",
-        index: "{:index}",
-      },
+      content: "{:content}",
     },
     values: {
-      todo: {
-        id: "{:id}",
-        content: "{:content}",
-        checked: "{:checked}",
-        name: "{:name}",
-        index: "{:index}",
-      },
+      content: "todo",
     },
   },
   response: {
     status: 201,
     body: {
-      todo: {
-        id: "{:id}",
-        content: "{:content}",
-        checked: "{:checked}",
-        name: "{:name}",
-        index: "{:index}",
-      },
+      id: "{randomString: id}",
+      content: "{:content}",
+      checked: false,
+      name: "{randomString: id}",
     },
   },
 };

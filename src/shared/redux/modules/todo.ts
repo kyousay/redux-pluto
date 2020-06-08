@@ -10,9 +10,9 @@ const TODO_CHANGE_CHECKED = "redux-pluto/todo/checked/change";
 const TODO_GET_TODOS_REQUEST = "redux-pluto/todo/get/todos/request";
 const TODO_GET_TODOS_SUCCESS = "redux-pluto/todo/get/todos/success";
 const TODO_GET_TODOS_FAIL = "redux-pluto/todo/get/todos/fail";
-// const TODO_POST_TODO_REQUEST = "redux-pluto/todo/post/todo/request";
-// const TODO_POST_TODO_SUCCESS = "redux-pluto/todo/post/todo/success";
-// const TODO_POST_TODO_FAIL = "redux-pluto/todo/post/todo/fail";
+const TODO_POST_TODO_REQUEST = "redux-pluto/todo/post/todo/request";
+const TODO_POST_TODO_SUCCESS = "redux-pluto/todo/post/todo/success";
+const TODO_POST_TODO_FAIL = "redux-pluto/todo/post/todo/fail";
 
 type CHANGE_CHECKED = {
   type: typeof TODO_CHANGE_CHECKED;
@@ -39,46 +39,41 @@ type TodosFail = {
   error: boolean;
 };
 
-// type PostTodoRequest = {
-//   type: typeof TODO_POST_TODO_REQUEST;
-//   payload: {
-//     resource: string;
-//     body: {
-//       todo: {
-//         id: string;
-//         content: string;
-//         checked: boolean;
-//         name: string;
-//         index: number;
-//       };
-//     };
-//   };
-// };
+type PostTodoRequest = {
+  type: typeof TODO_POST_TODO_REQUEST;
+  payload: {
+    resource: string;
+    body: {
+      content: string;
+    };
+  };
+};
 
-// type PostTodoSuccess = {
-//   type: typeof TODO_POST_TODO_SUCCESS;
-//   payload: {
-//     data: {
-//       todo: {
-//         id: string;
-//         content: string;
-//         checked: boolean;
-//         name: string;
-//         index: number;
-//       };
-//     };
-//   };
-// };
+type PostTodoSuccess = {
+  type: typeof TODO_POST_TODO_SUCCESS;
+  payload: {
+    data: {
+      id: string;
+      content: string;
+      checked: boolean;
+      name: string;
+    };
+  };
+};
 
-// type PostTodoFail = {
-//   type: typeof TODO_POST_TODO_FAIL;
-//   error: boolean;
-// };
+type PostTodoFail = {
+  type: typeof TODO_POST_TODO_FAIL;
+  error: boolean;
+};
 
-type Action = CHANGE_CHECKED | TodosRequest | TodosSuccess | TodosFail;
-// | PostTodoRequest
-// | PostTodoSuccess
-// | PostTodoFail;
+type Action =
+  | CHANGE_CHECKED
+  | TodosRequest
+  | TodosSuccess
+  | TodosFail
+  | PostTodoRequest
+  | PostTodoSuccess
+  | PostTodoFail;
 
 /**
  * Action creators
@@ -123,63 +118,45 @@ export function getTodos() {
   );
 }
 
-// export function PostTodoRequest(payload: {
-//   resource: string;
-//   body: {
-//     todo: {
-//       id: string;
-//       content: string;
-//       checked: boolean;
-//       name: string;
-//       index: number;
-//     };
-//   };
-// }): PostTodoRequest {
-//   return {
-//     type: TODO_POST_TODO_REQUEST,
-//     payload,
-//   };
-// }
+export function PostTodoRequest(payload: {
+  resource: string;
+  body: { content: string };
+}): PostTodoRequest {
+  return {
+    type: TODO_POST_TODO_REQUEST,
+    payload,
+  };
+}
 
-// export function PostTodoSuccess(payload: {
-//   data: {
-//     todo: {
-//       id: string;
-//       content: string;
-//       checked: boolean;
-//       name: string;
-//       index: number;
-//     };
-//   };
-// }): PostTodoSuccess {
-//   return {
-//     type: TODO_POST_TODO_SUCCESS,
-//     payload,
-//   };
-// }
+export function PostTodoSuccess(payload: {
+  data: {
+    id: string;
+    content: string;
+    checked: boolean;
+    name: string;
+  };
+}): PostTodoSuccess {
+  return {
+    type: TODO_POST_TODO_SUCCESS,
+    payload,
+  };
+}
 
-// export function PostTodoFail(): PostTodoFail {
-//   return {
-//     type: TODO_POST_TODO_FAIL,
-//     error: true,
-//   };
-// }
+export function PostTodoFail(): PostTodoFail {
+  return {
+    type: TODO_POST_TODO_FAIL,
+    error: true,
+  };
+}
 
-// export function PostTodo(body: {
-//   todo: {
-//     id: string;
-//     content: string;
-//     checked: boolean;
-//     name: string;
-//     index: number;
-//   };
-// }) {
-//   return steps(
-//     PostTodoRequest({ resource: "todo", body }),
-//     ({ payload }) => fetchrCreate(payload),
-//     [PostTodoSuccess, PostTodoFail],
-//   );
-// }
+export function postTodo(body: { content: string }) {
+  return steps(
+    PostTodoRequest({ resource: "todo", body }),
+    ({ payload }) => fetchrCreate(payload),
+    [PostTodoSuccess, PostTodoFail],
+  );
+}
+
 /**
  * Initial state
  */
@@ -240,31 +217,33 @@ export default function(state: State = INITIAL_STATE, action: Action): State {
         loaded: false,
       };
     }
-    // case TODO_POST_TODO_REQUEST: {
-    //   return {
-    //     ...state,
-    //     loading: true,
-    //     loaded: false,
-    //   };
-    // }
-    // case TODO_POST_TODO_SUCCESS: {
-    //   const { data: todo } = action.payload;
-    //   return {
-    //     ...state,
-    //     todos: [...state.todos, { ...todo }],
-    //     loading: false,
-    //     loaded: true,
-    //   };
-    // }
-    // case TODO_POST_TODO_FAIL: {
-    //   const { error } = action;
-    //   return {
-    //     ...state,
-    //     error,
-    //     loading: false,
-    //     loaded: false,
-    //   };
-    // }
+    case TODO_POST_TODO_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+        loaded: false,
+      };
+    }
+    case TODO_POST_TODO_SUCCESS: {
+      const {
+        data: { id, content, name, checked, index },
+      } = action.payload;
+      return {
+        ...state,
+        todos: [...state.todos, { id, content, name, checked, index }],
+        loading: false,
+        loaded: true,
+      };
+    }
+    case TODO_POST_TODO_FAIL: {
+      const { error } = action;
+      return {
+        ...state,
+        error,
+        loading: false,
+        loaded: false,
+      };
+    }
     default: {
       return state;
     }

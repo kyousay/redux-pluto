@@ -16,7 +16,7 @@ export default class Todo {
     return read(this.axios, this.name, this.pathname, params, {});
   }
 
-  //   create(req: any, resource: any, params: any, body?: any, config?: any) {
-  //     return create(this.axios, this.name, this.pathname, body, params, {});
-  //   }
+  create(req: any, resource: any, params: any, body?: any, config?: any) {
+    return create(this.axios, this.name, this.pathname, body, params, {});
+  }
 }

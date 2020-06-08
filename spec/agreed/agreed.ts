@@ -6,6 +6,6 @@ module.exports = convert(
     require("./agreedsample/get"),
     require("./uploadsample/post"),
     require("./todo/getTodos"),
-    // require("./todo/postTodo"),
+    require("./todo/postTodo"),
   ]),
 );

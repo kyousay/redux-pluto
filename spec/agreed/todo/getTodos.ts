@@ -1,4 +1,4 @@
-import { APIDef, GET, Success200, ResponseDef, Error404 } from "agreed-typed";
+import { APIDef, GET, Success200, ResponseDef } from "agreed-typed";
 
 export type TodosGetAPI = APIDef<
   GET,
@@ -16,7 +16,6 @@ export type TodosGetAPI = APIDef<
           content: string;
           checked: boolean;
           name: string;
-          index: number;
         }[];
       };
     }
@@ -38,15 +37,13 @@ const api: TodosGetAPI = {
             id: "todo01",
             content: "hello",
             checked: true,
-            name: "hello",
-            index: 0,
+            name: "todo01",
           },
           {
             id: "todo02",
             content: "world",
             checked: false,
-            name: "world",
-            index: 1,
+            name: "todo02",
           },
         ],
       },
