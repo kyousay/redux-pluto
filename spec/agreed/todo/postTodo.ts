@@ -7,6 +7,7 @@ export type PostTodoAPI = APIDef<
   {},
   {
     content: string;
+    postID: string;
   },
   {},
   ResponseDef<
@@ -26,18 +27,16 @@ const api: PostTodoAPI = {
     method: "POST",
     body: {
       content: "{:content}",
-    },
-    values: {
-      content: "todo",
+      postID: "{:postID}",
     },
   },
   response: {
     status: 201,
     body: {
-      id: "{randomString: id}",
+      id: "{:postID}",
       content: "{:content}",
       checked: false,
-      name: "{randomString: id}",
+      name: "{:postID}",
     },
   },
 };

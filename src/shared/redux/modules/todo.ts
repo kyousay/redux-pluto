@@ -149,7 +149,7 @@ export function PostTodoFail(): PostTodoFail {
   };
 }
 
-export function postTodo(body: { content: string }) {
+export function postTodo(body: { content: string; postID: string }) {
   return steps(
     PostTodoRequest({ resource: "todo", body }),
     ({ payload }) => fetchrCreate(payload),
@@ -162,13 +162,13 @@ export function postTodo(body: { content: string }) {
  */
 
 export type State = {
-  todos: Omit<TodoItemProps, "onChangeHandler">[];
+  todos: Omit<TodoItemProps, "onChangeHandler" | "index">[];
   loading: boolean;
   loaded: boolean;
   error?: boolean;
 };
 
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
   todos: [],
   loading: true,
   loaded: false,
@@ -226,11 +226,11 @@ export default function(state: State = INITIAL_STATE, action: Action): State {
     }
     case TODO_POST_TODO_SUCCESS: {
       const {
-        data: { id, content, name, checked, index },
+        data: { id, content, name, checked },
       } = action.payload;
       return {
         ...state,
-        todos: [...state.todos, { id, content, name, checked, index }],
+        todos: [...state.todos, { id, content, name, checked }],
         loading: false,
         loaded: true,
       };

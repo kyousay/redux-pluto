@@ -2,7 +2,7 @@ import React from "react";
 import TodoItem, { Props as TodoItemProps } from "../atoms/TodoItem";
 
 type Props = {
-  todos: Omit<TodoItemProps, "onChangeHandler">[];
+  todos: Omit<TodoItemProps, "onChangeHandler" | "index">[];
   onChangeHandler: Function;
 };
 

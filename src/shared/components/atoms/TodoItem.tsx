@@ -13,7 +13,7 @@ export type Props = {
 export default function TodoItem(props: Props) {
   const { id, name, checked, content, index, onChangeHandler } = props;
   return (
-    <div>
+    <TodoRow>
       <TodoCheck
         id={id}
         type="checkbox"
@@ -22,7 +22,7 @@ export default function TodoItem(props: Props) {
         onChange={() => onChangeHandler(index, checked)}
       />
       <TodoContent htmlFor={id}>{content}</TodoContent>
-    </div>
+    </TodoRow>
   );
 }
 
@@ -33,4 +33,10 @@ const TodoCheck = styled.input`
 
 const TodoContent = styled.label`
   font-size: 1.2rem;
+`;
+
+const TodoRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
