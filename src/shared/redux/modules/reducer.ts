@@ -11,9 +11,11 @@ import loading, { State as LoadingState } from "./loading";
 import hackerNews, { State as HackerNewsState } from "./hackerNews";
 import uploadSample, { State as UploadSampleState } from "./uploadSample";
 import canvas, { State as CanvasState } from "./canvas";
+import todo, { State as Todo } from "./todo";
 
 export type RootState = {
   app: {
+    todo: Todo;
     auth: AuthState;
     csrf: CsrfState;
     counter: CounterState;
@@ -32,6 +34,7 @@ export type RootState = {
 
 export default combineReducers({
   app: combineReducers({
+    todo,
     auth,
     csrf,
     counter,
