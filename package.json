@@ -52,7 +52,7 @@
     "date-fns": "2.13.0",
     "debug": "4.1.1",
     "errorhandler": "1.5.1",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "express-session": "1.17.1",
     "express-useragent": "1.0.12",
     "favalid": "0.9.1",
